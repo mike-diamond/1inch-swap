@@ -22,7 +22,7 @@ declare global {
       toAmount: string
       toToken: TokenApiData
       fromToken: TokenApiData
-      estimatedGas: string
+      estimatedGas: number
     }
   }
 }

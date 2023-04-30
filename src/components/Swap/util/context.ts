@@ -5,13 +5,16 @@ import { useForm, useFormState } from 'formular'
 
 
 export const initialContext: Swap.Context = {
+  // @ts-ignore
   form: {},
   rate: '',
   initialRate: '',
   toAmount: '0',
+  // @ts-ignore
   toToken: {},
+  // @ts-ignore
   fromToken: {},
-  estimatedGas: '0',
+  estimatedGas: 0,
 }
 
 export const {

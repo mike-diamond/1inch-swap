@@ -48,7 +48,7 @@ const useQuote = ({ fromToken, toToken, amount, cache }: Input) => {
       return data.estimatedGas
     }
 
-    return '0'
+    return 0
   }, [ data ])
 
   return {
