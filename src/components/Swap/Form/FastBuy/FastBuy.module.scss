@@ -1,0 +1,17 @@
+.button {
+  color: $color-navy;
+  border: 1px solid $color-ink;
+  @include basic-transition();
+
+  @media (hover: hover) {
+    &:hover {
+      color: $color-pearl;
+      border: 1px solid $color-banana;
+    }
+  }
+
+  &.active {
+    color: $color-pearl;
+    border: 1px solid $color-banana;
+  }
+}

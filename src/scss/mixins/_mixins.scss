@@ -1,0 +1,76 @@
+@mixin button-colors($color, $property: background-color) {
+
+  @media (hover: hover) {
+    &:hover {
+      #{$property}: lighten($color, 5);
+    }
+  }
+
+  &:active {
+    #{$property}: darken($color, 5);
+  }
+
+  @include keyboard-focus {
+    #{$property}: lighten($color, 3);
+  }
+}
+
+@mixin link-colors($colorInitial, $colorActive) {
+  color: $colorInitial;
+  transition: color ease .14s;
+
+  @media (hover: hover) {
+    &:hover {
+      color: $colorActive;
+
+      .bg-inherit {
+        background: $colorActive;
+      }
+    }
+  }
+
+  .bg-inherit {
+    background: $colorInitial;
+    transition: background-color ease .14s;
+  }
+
+  &.active {
+    color: $colorActive;
+
+    .bg-inherit {
+      background: $colorActive;
+    }
+  }
+}
+
+
+// Select
+
+@mixin no-user-select {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+
+// Focus
+
+@mixin focus-shadow {
+  border-color: #0f77ff;
+  box-shadow: 0 0 4px 2px rgba(15, 119, 255, 0.8);
+}
+
+@mixin mouse-focus {
+  :global(.js-focus-visible) &:focus:not(:global(.focus-visible)) {
+    @content;
+  }
+}
+
+@mixin keyboard-focus {
+  :global(.js-focus-visible) &:global(.focus-visible):focus {
+    @content;
+  }
+}

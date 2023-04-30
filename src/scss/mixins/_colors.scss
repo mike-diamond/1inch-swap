@@ -1,0 +1,23 @@
+// Colors mnemonic
+$color-banana: #e5e54b;     // accent
+$color-pearl: #fff;         // white
+$color-moonstone: #e5e5e5;  // select
+$color-bluebell: #7185aa;   // note
+$color-navy: #637488;       // fast buy
+$color-ink: #1d2a43;        // fast buy border
+$color-coal: #141822;       // select bg
+$color-onyx: #101010;       // input bg
+$color-raven: #1e1e1e;      // bg
+
+// Colors map
+$colors: (
+  'banana': $color-banana,
+  'pearl': $color-pearl,
+  'moonstone': $color-moonstone,
+  'bluebell': $color-bluebell,
+  'navy': $color-navy,
+  'ink': $color-ink,
+  'coal': $color-coal,
+  'onyx': $color-onyx,
+  'raven': $color-raven,
+);

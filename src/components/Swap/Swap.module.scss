@@ -1,0 +1,14 @@
+.container {
+  background-image: url('./images/bg.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+@include except-mobile {
+
+  .wrapper {
+    background-image: url('./images/stroke.svg');
+    background-size: cover;
+  }
+}

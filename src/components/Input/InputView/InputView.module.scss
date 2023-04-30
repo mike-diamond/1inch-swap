@@ -1,0 +1,22 @@
+.container {
+  outline: 2rem solid transparent;
+  cursor: text;
+  @include basic-transition();
+
+  &:not(.disabled) {
+
+    @media (hover: hover) {
+      &:hover {
+        outline: 2rem solid $color-ink;
+      }
+    }
+
+    &.focused {
+      outline: 2rem solid $color-ink;
+    }
+  }
+}
+
+.label {
+  pointer-events: none;
+}

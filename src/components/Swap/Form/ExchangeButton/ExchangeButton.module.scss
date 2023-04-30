@@ -1,0 +1,11 @@
+.container {
+  background: $color-onyx;
+  @include basic-transition();
+
+  @media (hover: hover) {
+
+    &:hover {
+      background: $color-ink;
+    }
+  }
+}

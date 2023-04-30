@@ -1,0 +1,34 @@
+$headers: (
+  ('h14', 14, 20, 600),
+  ('h16', 16, 21, 600),
+);
+
+$texts: (
+  ('t8', 8, 24, 500),
+  ('t24', 24, 42, 500),
+);
+
+$notes: (
+  ('n14', 14, 24, 400),
+);
+
+$groups: (
+  $headers,
+  $texts,
+  $notes,
+);
+
+@each $group in $groups {
+  @each $values in $group {
+    $name: nth($values, 1);
+    $fontSize: nth($values, 2);
+    $lineHeight: nth($values, 3);
+    $fontWeight: nth($values, 4);
+
+    .text-#{$name} {
+      font-size: #{$fontSize}rem;
+      line-height: #{$lineHeight}rem;
+      font-weight: #{$fontWeight};
+    }
+  }
+}

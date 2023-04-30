@@ -1,0 +1,10 @@
+$layer-menu: 200;
+
+
+.z-1 {
+  z-index: 1;
+}
+
+.z-menu {
+  z-index: $layer-menu;
+}

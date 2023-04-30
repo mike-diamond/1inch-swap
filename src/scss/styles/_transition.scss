@@ -1,0 +1,18 @@
+.dropdown-transition {
+
+  &.top-100 {
+    @include top-bottom(animation, .25s, ease-in-out);
+  }
+
+  &.bottom-100 {
+    @include bottom-top(animation, .25s, ease-in-out);
+  }
+
+  &.right-100 {
+    @include right-left(animation, .25s, ease-in-out);
+  }
+
+  &.left-100 {
+    @include left-right(animation, .25s, ease-in-out);
+  }
+}

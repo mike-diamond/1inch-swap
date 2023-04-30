@@ -1,0 +1,17 @@
+@mixin button-style-color($color, $opacity) {
+  background-color: $color;
+
+  &:not(.disabled) {
+    @include button-colors($color, background-color);
+  }
+
+  &.disabled {
+    opacity: $opacity;
+  }
+}
+
+.button {
+  height: 54rem;
+  @include basic-transition(background-color);
+  @include button-style-color($color-banana, 0.4);
+}
