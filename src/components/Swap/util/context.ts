@@ -1,20 +1,22 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { initContext } from 'modules'
 import { useQuote, useTokens } from 'api'
 import { useForm, useFormState } from 'formular'
 
 
 export const initialContext: Swap.Context = {
+  rate: 0,
+  toAmount: '0',
+  initialRate: 0,
+  estimatedGas: 0,
   // @ts-ignore
   form: {},
-  rate: '',
-  initialRate: '',
-  toAmount: '0',
   // @ts-ignore
   toToken: {},
   // @ts-ignore
   fromToken: {},
-  estimatedGas: 0,
+  sellOptions: [],
+  buyOptions: [],
 }
 
 export const {
@@ -48,6 +50,54 @@ export const {
   const fromToken = tokens?.[values.sellToken]
   const toToken = tokens?.[values.buyToken]
 
+  const sellOptions = useMemo(() => {
+    if (tokens && toToken) {
+      return Object.keys(tokens)
+        .filter((key) => key !== toToken.symbol)
+        .map((key) => {
+          const token = tokens[key]
+
+          return {
+            title: token.symbol,
+            image: token.logoURI,
+            value: token.symbol,
+          }
+        })
+    }
+
+    return []
+  }, [ tokens, toToken ])
+
+  const buyOptions = useMemo(() => {
+    if (tokens && fromToken) {
+      return Object.keys(tokens)
+        .filter((key) => key !== fromToken.symbol)
+        .map((key) => {
+          const token = tokens[key]
+
+          return {
+            title: token.symbol,
+            image: token.logoURI,
+            value: token.symbol,
+          }
+        })
+    }
+
+    return []
+  }, [ tokens, toToken ])
+
+  useEffect(() => {
+    if (sellOptions.length && !fromToken) {
+      form.fields.sellToken.set(sellOptions[0].value)
+    }
+  }, [ form, fromToken, sellOptions ])
+
+  useEffect(() => {
+    if (buyOptions.length && !toToken) {
+      form.fields.buyToken.set(buyOptions[0].value)
+    }
+  }, [ form, toToken, buyOptions ])
+
   const { rate, toAmount, estimatedGas } = useQuote({
     fromToken,
     toToken,
@@ -78,5 +128,7 @@ export const {
     toToken,
     fromToken,
     estimatedGas,
+    sellOptions,
+    buyOptions,
   }
 })

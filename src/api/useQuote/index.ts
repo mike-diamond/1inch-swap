@@ -36,11 +36,11 @@ const useQuote = ({ fromToken, toToken, amount, cache }: Input) => {
       const fromNumber = Number(amountValue)
 
       if (fromNumber && toNumber) {
-        return (fromNumber / toNumber).toFixed(2).replace(/(\.0)?0$/, '')
+        return fromNumber / toNumber
       }
     }
 
-    return ''
+    return 0
   }, [ toAmount, amountValue ])
 
   const estimatedGas = useMemo(() => {

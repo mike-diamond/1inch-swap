@@ -1,5 +1,7 @@
 import { Form } from 'formular'
 
+import { DropdownProps } from 'components/Dropdown/Dropdown'
+
 import { TokenApiData } from '../../api/useQuote/types'
 
 
@@ -17,12 +19,14 @@ declare global {
 
     type Context = {
       form: Form<Fields>
-      rate: string
-      initialRate: string
+      rate: number
+      initialRate: number
       toAmount: string
       toToken: TokenApiData
       fromToken: TokenApiData
       estimatedGas: number
+      sellOptions: DropdownProps['options']
+      buyOptions: DropdownProps['options']
     }
   }
 }

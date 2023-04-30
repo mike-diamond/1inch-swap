@@ -5,7 +5,7 @@ import localStorage from './local-storage'
 
 const useWeb3Connect = () => {
   const [ { address, chain, isConnecting }, setState ] = useState({
-    chain: 1,
+    chain: typeof window !== 'undefined' ? window.ethereum?.networkVersion : 1,
     address: '',
     isConnecting: false,
   })

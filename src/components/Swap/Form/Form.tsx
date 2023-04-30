@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import { useTokens } from 'api'
 
 import Input from 'components/Input/Input'
 import { swapContext } from 'components/Swap/util'
@@ -16,7 +17,7 @@ type FormProps = {
 const Form: React.FC<FormProps> = (props) => {
   const { className } = props
 
-  const { form, fromToken, toToken } = swapContext.useData()
+  const { form, fromToken, toToken, sellOptions, buyOptions } = swapContext.useData()
 
   return (
     <div className={className}>
@@ -28,14 +29,28 @@ const Form: React.FC<FormProps> = (props) => {
           <TokenSelect
             className="ml-16"
             label="You buy"
-            token={fromToken?.symbol}
-            image={fromToken?.logoURI}
+            token={toToken?.symbol}
+            image={toToken?.logoURI}
+            options={buyOptions}
             withMinButton
+            onChange={(value) => form.fields.buyToken.set(value)}
           />
         )}
       />
       <div className="relative mt-4 flex justify-center">
-        <ExchangeButton className="z-1" />
+        <ExchangeButton
+          className="z-1"
+          onClick={() => {
+            const { buy, sell, buyToken, sellToken } = form.getValues()
+
+            form.setValues({
+              buy: sell,
+              sell: buy,
+              buyToken: sellToken,
+              sellToken: buyToken,
+            })
+          }}
+        />
         <div className="absolute w-full h-px bg-onyx left-0 top-50" />
       </div>
       <Input
@@ -47,8 +62,10 @@ const Form: React.FC<FormProps> = (props) => {
           <TokenSelect
             className="ml-16"
             label="You sell"
-            token={toToken?.symbol}
-            image={toToken?.logoURI}
+            token={fromToken?.symbol}
+            image={fromToken?.logoURI}
+            options={sellOptions}
+            onChange={(value) => form.fields.sellToken.set(value)}
           />
         )}
       />

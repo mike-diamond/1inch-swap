@@ -26,7 +26,9 @@ const Price: React.FC<PriceProps> = (props) => {
   const rateText = useMemo(() => {
     if (fromToken && toToken && lastRateRef.current) {
       // TODO add fiat value
-      return `1 ${toToken.symbol} = ${lastRateRef.current} ${fromToken.symbol} <span class='color-navy'>($0)</span>`
+      const rateString = lastRateRef.current.toFixed(4).replace(/(\.0)?0$/, '')
+
+      return `1 ${toToken.symbol} = ${rateString} ${fromToken.symbol} <span class='color-navy'>($0)</span>`
     }
 
     return ''

@@ -8,6 +8,8 @@ const allowedTokens = [
   'ETH',
   'ARB',
   'USDT',
+  'USDC',
+  '1INCH',
 ]
 
 const useTokens = () => {
