@@ -18,7 +18,9 @@ const Button: React.FC<ButtonProps> = (props) => {
 
   return (
     <ButtonBase
-      className={cx(s.button, className, 'text-center radius-16')}
+      className={cx(s.button, className, 'text-center radius-16', {
+        'opacity-72': disabled,
+      })}
       disabled={disabled}
       type={type}
       dataTestId={dataTestId}

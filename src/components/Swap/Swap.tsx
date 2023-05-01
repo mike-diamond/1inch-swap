@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import cx from 'classnames'
 
-import { useWeb3Connect } from 'modules'
+import { web3 } from 'modules'
+import { TransactionRequest } from '@ethersproject/providers'
+import { useAllowance, useSwap, useTransaction } from 'api'
 
 import Button from 'components/Button/Button'
-import { swapContext } from 'components/Swap/util'
+import { swapContext, useBalance } from 'components/Swap/util'
 
 import Menu from './Menu/Menu'
 import Form from './Form/Form'
@@ -20,15 +22,72 @@ const Swap: React.FC<SwapProps> = (props) => {
   const { className } = props
 
   const context = swapContext.useInit()
-  const { address, connect, isConnecting } = useWeb3Connect()
+  const { balance } = useBalance(context.fromToken)
+  const { allowance } = useAllowance(context.fromToken?.address)
+  const { address, connect, provider, isConnecting } = web3.useData()
+  const { transactionData } = useTransaction({
+    tokenAddress: context.fromToken?.address,
+    skip: Boolean(allowance),
+  })
+  const { swapTransactionData, fetchSwap } = useSwap({
+    fromToken: context.fromToken,
+    toToken: context.toToken,
+    amount: context.values.sell,
+    allowance,
+  })
+
+  const handleApprove = useCallback(async () => {
+    if (provider && transactionData) {
+      const signer = provider.getUncheckedSigner(address)
+      const transaction = await signer.sendTransaction(transactionData)
+      await transaction.wait()
+    }
+  }, [ address, provider, transactionData ])
+
+  const handleSwap = useCallback(async (swapTransactionData: TransactionRequest) => {
+    if (provider && swapTransactionData) {
+      const signer = provider.getUncheckedSigner(address)
+      const transaction = await signer.sendTransaction(swapTransactionData)
+      await transaction.wait()
+    }
+  }, [ address, provider ])
+
+  const token = context.fromToken?.symbol
+  const isSufficient = Number(balance) >= Number(context.values.sell.replace(/\s/g, ''))
 
   const buttonTitle = useMemo(() => {
     if (isConnecting) {
       return 'Connecting...'
     }
+    if (!address) {
+      return 'Connect Wallet'
+    }
+    if (!isSufficient) {
+      return `Insufficient ${token} balance`
+    }
 
-    return address ? 'Swap' : 'Connect Wallet'
-  }, [ address, isConnecting ])
+    return 'Swap'
+  }, [ address, token, isConnecting, isSufficient ])
+
+  const handleClick = useCallback(async () => {
+    if (address) {
+      let transactionData = swapTransactionData
+
+      if (!Number(allowance)) {
+        await handleApprove()
+        const swapData = await fetchSwap()
+
+        transactionData = swapData?.tx
+      }
+
+      if (transactionData) {
+        await handleSwap(transactionData)
+      }
+    }
+    else {
+      connect()
+    }
+  }, [ address, allowance, connect, handleApprove, swapTransactionData ])
 
   return (
     <div className={cx(s.wrapper, className, 'radius-30 p-2')}>
@@ -44,15 +103,8 @@ const Swap: React.FC<SwapProps> = (props) => {
             <Button
               className="w-full"
               title={buttonTitle}
-              onClick={() => {
-                if (address) {
-                  // TODO add allowance and swap
-                  console.log(address)
-                }
-                else {
-                  connect()
-                }
-              }}
+              disabled={Boolean(address && !isSufficient)}
+              onClick={handleClick}
             />
           </div>
         </swapContext.Provider>

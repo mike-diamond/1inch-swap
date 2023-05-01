@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { useQuery, useWeb3Connect } from 'modules'
+import { useQuery, web3 } from 'modules'
 import { formatUnits, parseUnits } from '@ethersproject/units'
 
 import { ApiData, Input } from './types'
 
 
 const useQuote = ({ fromToken, toToken, amount, cache }: Input) => {
-  const { chain } = useWeb3Connect()
+  const { chain } = web3.useData()
   const amountValue = useMemo(() => amount.replace(/\s/g, ''), [ amount ])
 
   const url = useMemo(() => {

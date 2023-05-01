@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useQuery, useWeb3Connect } from 'modules'
+import { web3, useQuery } from 'modules'
 
 import { ApiData } from './types'
 
@@ -10,10 +10,11 @@ const allowedTokens = [
   'USDT',
   'USDC',
   '1INCH',
+  'SWISE',
 ]
 
 const useTokens = () => {
-  const { chain } = useWeb3Connect()
+  const { chain } = web3.useData()
   const { data, isFetching } = useQuery<ApiData>(`/${chain}/tokens`, 'force-cache')
 
   const tokens = useMemo(() => {

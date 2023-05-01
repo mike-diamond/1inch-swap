@@ -1,2 +1,6 @@
+export { default as useSwap } from './useSwap'
 export { default as useQuote } from './useQuote'
 export { default as useTokens } from './useTokens'
+export { default as useAllowance } from './useAllowance'
+export { default as useFiatPrice } from './useFiatPrice'
+export { default as useTransaction } from './useTransaction'

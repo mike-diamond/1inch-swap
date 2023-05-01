@@ -12,7 +12,7 @@ export type InputProps = Omit<InputViewProps, 'error' | 'value'> & {
 
 const Input: React.FC<InputProps> = (props) => {
   const {
-    className, field, label, mask, disabled, dataTestId, isRequired, rightNode,
+    className, field, label, mask, disabled, dataTestId, isRequired, rightNode, autoFocus,
   } = props
 
   const { value } = useFieldState(field)
@@ -46,6 +46,7 @@ const Input: React.FC<InputProps> = (props) => {
       className={className}
       value={value}
       label={label}
+      autoFocus={autoFocus}
       rightNode={rightNode}
       disabled={disabled}
       dataTestId={dataTestId}

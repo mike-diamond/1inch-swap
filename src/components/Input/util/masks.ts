@@ -1,5 +1,7 @@
 import { ChangeEvent } from 'react'
 
+import formatInteger from '../../../api/useFiatPrice/formatInteger'
+
 
 export const createMask = (formula: string) => {
   const patternArray = formula.split('')
@@ -62,17 +64,6 @@ const initAmountMask = (): ReturnType<CreateMaskWithModifiers> => {
   const preModify = (event: ChangeEvent<HTMLInputElement>, value: string) => {
     // Remove any non-digit characters except for periods
     return value.replace(/[^\d.]/g, '')
-  }
-
-  const formatInteger = (value: string) => {
-    const parts = value.replace(/\s/g, '').split('.')
-    const integerPart = parts[0]
-      .replace(/^0+/, '')
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-
-    const decimalPart = /\./.test(value) ? `.${parts[1]}` : ''
-
-    return [ integerPart, decimalPart ].join('')
   }
 
   const postModify = (event: ChangeEvent<HTMLInputElement>, value: string) => {

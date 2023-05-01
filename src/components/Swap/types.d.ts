@@ -19,6 +19,7 @@ declare global {
 
     type Context = {
       form: Form<Fields>
+      values: Fields
       rate: number
       initialRate: number
       toAmount: string

@@ -1,6 +1,8 @@
 import React, { useMemo, useRef } from 'react'
 import Image from 'next/image'
 import cx from 'classnames'
+import { formatUnits } from '@ethersproject/units'
+import { useFiatPrice } from 'api'
 
 import Icon from 'components/Icon/Icon'
 import Text from 'components/Text/Text'
@@ -8,6 +10,7 @@ import ButtonBase from 'components/ButtonBase/ButtonBase'
 import { swapContext } from 'components/Swap/util'
 
 import gasImage from './images/gas.png'
+import formatInteger from '../../../../api/useFiatPrice/formatInteger'
 
 
 type PriceProps = {
@@ -21,14 +24,25 @@ const Price: React.FC<PriceProps> = (props) => {
 
   const rateValue = rate || initialRate
   const lastRateRef = useRef(rateValue)
+
   lastRateRef.current = rate || lastRateRef.current || initialRate
+
+  const fiatValue = useFiatPrice({
+    value: String(lastRateRef.current),
+    token: fromToken?.symbol,
+  })
+
+  const gasFiatValue = useFiatPrice({
+    value: formatUnits(estimatedGas.toString(), 'gwei'),
+    token: 'ETH',
+  })
 
   const rateText = useMemo(() => {
     if (fromToken && toToken && lastRateRef.current) {
-      // TODO add fiat value
-      const rateString = lastRateRef.current.toFixed(4).replace(/(\.0)?0$/, '')
+      const rateString = lastRateRef.current.toFixed(4)
+        .replace(/(\.0)?0$/, '')
 
-      return `1 ${toToken.symbol} = ${rateString} ${fromToken.symbol} <span class='color-navy'>($0)</span>`
+      return `1 ${toToken.symbol} = ${formatInteger(rateString)} ${fromToken.symbol} <span class='color-navy'>($${fiatValue})</span>`
     }
 
     return ''
@@ -62,7 +76,7 @@ const Price: React.FC<PriceProps> = (props) => {
         />
         <Text
           className="ml-4"
-          message={`${estimatedGas} gwei`} // TODO add fiat value
+          message={`$${gasFiatValue}`}
           size="n14"
           color="navy"
         />

@@ -10,6 +10,10 @@ type State<Data> = {
 
 type Output<Data> = State<Data> & {
   isFetching: boolean
+  fetch: () => {
+    request: Promise<Data>
+    controller: AbortController
+  }
 }
 
 const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache'): Output<Data> => {
@@ -46,6 +50,8 @@ const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache'): Output<D
       .then((data) => {
         urlRef.current = url
         setState({ data, error: null })
+
+        return data
       })
       .catch((error) => {
         if (error.code !== 20) {
@@ -56,6 +62,8 @@ const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache'): Output<D
             error: error?.message || error,
           })
         }
+
+        return Promise.reject(error)
       })
 
     return {
@@ -81,15 +89,17 @@ const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache'): Output<D
       return {
         data: null,
         error: null,
+        fetch: handleRequest,
         isFetching: true,
       }
     }
 
     return {
       ...state,
+      fetch: handleRequest,
       isFetching: false,
     }
-  }, [ url, state ])
+  }, [ url, state, handleRequest ])
 }
 
 

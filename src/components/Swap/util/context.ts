@@ -12,6 +12,8 @@ export const initialContext: Swap.Context = {
   // @ts-ignore
   form: {},
   // @ts-ignore
+  values: {},
+  // @ts-ignore
   toToken: {},
   // @ts-ignore
   fromToken: {},
@@ -122,6 +124,7 @@ export const {
 
   return {
     form,
+    values,
     rate,
     initialRate,
     toAmount,

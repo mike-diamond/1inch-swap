@@ -15,17 +15,18 @@ export type InputViewProps = {
   disabled?: boolean
   dataTestId?: string
   isRequired?: boolean
+  autoFocus?: boolean
   onBlur?: () => void
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 const InputView: React.FC<InputViewProps> = (props) => {
   const {
-    className, value, rightNode, label, disabled, isRequired, dataTestId, onChange, onBlur,
+    className, value, rightNode, label, disabled, isRequired, dataTestId, autoFocus, onChange, onBlur,
   } = props
 
   const ref = useRef<HTMLInputElement>(null)
-  const [ isFocused, setFocused ] = useState(false)
+  const [ isFocused, setFocused ] = useState(Boolean(autoFocus))
 
   const handleBlur = useCallback(() => {
     setFocused(false)
@@ -38,6 +39,13 @@ const InputView: React.FC<InputViewProps> = (props) => {
   const handleFocus = useCallback(() => {
     setFocused(true)
   }, [])
+
+  useEffect(() => {
+    if (autoFocus) {
+      setFocused(true)
+      ref.current?.setSelectionRange(value.length, value.length)
+    }
+  }, [ autoFocus ])
 
   const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
     if (typeof onChange === 'function') {
@@ -62,6 +70,7 @@ const InputView: React.FC<InputViewProps> = (props) => {
     ref,
     value,
     disabled,
+    autoFocus,
     id: controlId,
     'data-testid': testId,
     'aria-required': isRequired,
@@ -82,11 +91,12 @@ const InputView: React.FC<InputViewProps> = (props) => {
         <div className="flex-1">
           <Text
             className={s.label}
-            message={label || ' '}
+            message={label || '&nbsp;'}
             tag="label"
             size="n14"
             color="bluebell"
             htmlFor={controlId}
+            html={!label}
           />
           <div className="flex items-center">
             <input

@@ -1,21 +1,42 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Web3Provider } from '@ethersproject/providers'
 
-import localStorage from './local-storage'
+import initContext from '../initContext'
+import localStorage from '../local-storage'
 
 
-const useWeb3Connect = () => {
+export const initialContext: Web3.Context = {
+  chain: typeof window !== 'undefined' ? Number(window.ethereum?.networkVersion) || 1 : 1,
+  address: '',
+  isConnecting: false,
+  provider: null,
+  connect: () => {},
+}
+
+export const {
+  Provider,
+  useData,
+  useInit,
+} = initContext<Web3.Context>(initialContext, () => {
   const [ { address, chain, isConnecting }, setState ] = useState({
-    chain: typeof window !== 'undefined' ? window.ethereum?.networkVersion : 1,
+    chain: typeof window !== 'undefined' ? Number(window.ethereum?.networkVersion) || 1 : 1,
     address: '',
     isConnecting: false,
   })
+
+  const provider = useMemo(() => {
+    if (typeof window !== 'undefined' && window.ethereum) {
+      return new Web3Provider(window.ethereum)
+    }
+
+    return null
+  }, [])
 
   useEffect(() => {
     if (address) {
       localStorage.setItem('address', address)
 
       return () => {
-        console.log('remove')
         localStorage.removeItem('address')
       }
     }
@@ -28,11 +49,12 @@ const useWeb3Connect = () => {
 
         const chain = Number(window.ethereum?.networkVersion)
 
+        console.log('set', address)
         setState({ address, chain, isConnecting: false })
       }
       catch (error) {
         console.error({ error })
-        setState({ address: '', chain: 1, isConnecting: false })
+        setState((state) => ({ ...state, address: '', isConnecting: false }))
       }
     }
   }, [])
@@ -44,6 +66,7 @@ const useWeb3Connect = () => {
         setState({ address: '', chain: Number(window.ethereum?.networkVersion) || 1, isConnecting: false })
         connect()
       })
+
       window.ethereum.on('chainChanged', () => {
         setState((state) => ({ ...state, chain: Number(window.ethereum?.networkVersion) || 1 }))
       })
@@ -60,9 +83,7 @@ const useWeb3Connect = () => {
     chain,
     address,
     isConnecting,
+    provider,
     connect,
   }
-}
-
-
-export default useWeb3Connect
+})

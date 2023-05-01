@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { useTokens } from 'api'
+import { useFiatPrice, useTokens } from 'api'
 
 import Input from 'components/Input/Input'
 import { swapContext } from 'components/Swap/util'
@@ -17,14 +17,25 @@ type FormProps = {
 const Form: React.FC<FormProps> = (props) => {
   const { className } = props
 
-  const { form, fromToken, toToken, sellOptions, buyOptions } = swapContext.useData()
+  const { form, values, fromToken, toToken, sellOptions, buyOptions } = swapContext.useData()
+
+  const buyLabel = useFiatPrice({
+    value: values.buy,
+    token: toToken?.symbol,
+  })
+
+  const sellLabel = useFiatPrice({
+    value: values.sell,
+    token: fromToken?.symbol,
+  })
 
   return (
     <div className={className}>
       <Input
         field={form.fields.buy}
-        label="~$10 921.69"
+        label={buyLabel ? `~$${buyLabel}` : ''}
         mask="amount"
+        disabled
         rightNode={(
           <TokenSelect
             className="ml-16"
@@ -56,8 +67,9 @@ const Form: React.FC<FormProps> = (props) => {
       <Input
         className="mt-4"
         field={form.fields.sell}
-        label="~$10 921.69"
+        label={sellLabel ? `~$${sellLabel}` : ''}
         mask="amount"
+        autoFocus
         rightNode={(
           <TokenSelect
             className="ml-16"

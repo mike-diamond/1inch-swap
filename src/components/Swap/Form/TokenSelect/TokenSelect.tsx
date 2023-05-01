@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import cx from 'classnames'
 import Image from 'next/image'
 
 import Text from 'components/Text/Text'
 import Icon from 'components/Icon/Icon'
-import Dropdown, { DropdownProps } from 'components/Dropdown/Dropdown'
 import ButtonBase from 'components/ButtonBase/ButtonBase'
+import Dropdown, { DropdownProps } from 'components/Dropdown/Dropdown'
 
 import s from './TokenSelect.module.scss'
+
+import arbImage from './image/arb.svg'
+import ethImage from './image/eth.svg'
+
 
 
 type TokenSelectProps = {
@@ -20,8 +24,24 @@ type TokenSelectProps = {
   onChange: DropdownProps['onChange']
 }
 
+const tokenImages = {
+  ETH: ethImage.src,
+  ARB: arbImage.src,
+}
+
 const TokenSelect: React.FC<TokenSelectProps> = (props) => {
   const { className, label, token, image, options, withMinButton, onChange } = props
+
+  const tokenImage = tokenImages[token as keyof typeof tokenImages] || image
+
+  const modifiedOptions = useMemo(() => (
+    options.map((option) => {
+      return {
+        ...option,
+        image: tokenImages[option.title as keyof typeof tokenImages] || option.image,
+      }
+    })
+  ), [ options ])
 
   return (
     <div className={className}>
@@ -46,17 +66,17 @@ const TokenSelect: React.FC<TokenSelectProps> = (props) => {
           )
         }
         <Dropdown
-          options={options}
+          options={modifiedOptions}
           position="bottom-right"
           button={(
             <ButtonBase
               className={cx(s.button, 'flex items-center bg-coal pl-4 py-4 pr-8')}
             >
               {
-                Boolean(image) && (
+                Boolean(tokenImage) && (
                   <Image
                     className="mr-4"
-                    src={image as string}
+                    src={tokenImage as string}
                     width={32}
                     height={32}
                     alt={token as string}
