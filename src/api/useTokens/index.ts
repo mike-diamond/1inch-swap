@@ -11,7 +11,6 @@ const allowedTokens = [
   'USDT',
   'USDC',
   '1INCH',
-  'SWISE',
 ]
 
 const useTokens = () => {
