@@ -69,6 +69,20 @@ const useSwapForm = (): Output => {
   }, [ tokens, fromToken ])
 
   useEffect(() => {
+    const handleChange = (value: string) => {
+      if (value === '0') {
+        form.fields.buy.set('0')
+      }
+    }
+
+    form.fields.sell.on('change', handleChange)
+
+    return () => {
+      form.fields.sell.off('change', handleChange)
+    }
+  }, [ form ])
+
+  useEffect(() => {
     if (sellOptions.length && !fromToken) {
       form.fields.sellToken.set(sellOptions[0].value)
     }
