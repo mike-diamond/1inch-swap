@@ -1,20 +1,19 @@
 import React from 'react'
-import { web3 } from 'modules'
 
-import Swap from 'components/Swap/Swap'
+import Swap from './Swap/Swap'
+import Web3Provider from './Web3Provider/Web3Provider'
+import SwapProvider from './SwapProvider/SwapProvider'
 
 
-const HomeView: React.FC = () => {
-  const context = web3.useInit()
-
-  return (
-    <div className="w-full width-container">
-      <web3.Provider value={context}>
+const HomeView: React.FC = () => (
+  <div className="w-full width-container">
+    <Web3Provider>
+      <SwapProvider>
         <Swap />
-      </web3.Provider>
-    </div>
-  )
-}
+      </SwapProvider>
+    </Web3Provider>
+  </div>
+)
 
 
 export default HomeView

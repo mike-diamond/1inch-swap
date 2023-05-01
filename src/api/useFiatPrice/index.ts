@@ -33,10 +33,10 @@ const useFiatPrice = ({ value, token }: Input) => {
       const resultString = resultNumber.toFixed(2)
         .replace(/(\.0)?0$/, '')
 
-      return formatInteger(resultString)
+      return `$${formatInteger(resultString)}`
     }
 
-    return '0'
+    return '$0'
   }, [ rate, value ])
 }
 

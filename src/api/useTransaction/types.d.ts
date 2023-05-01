@@ -8,5 +8,5 @@ export type ApiData = {
 export type Input = {
   skip?: boolean
   amount?: string
-  tokenAddress: string
+  tokenAddress?: string
 }

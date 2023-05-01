@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
-import { useFiatPrice, useTokens } from 'api'
+import React from 'react'
+import { useFiatPrice } from 'api'
 
 import Input from 'components/Input/Input'
-import { swapContext } from 'components/Swap/util'
+import { swapContext } from 'views/HomeView/Swap/util'
 
 import Price from './Price/Price'
 import FastBuy from './FastBuy/FastBuy'
@@ -33,7 +33,7 @@ const Form: React.FC<FormProps> = (props) => {
     <div className={className}>
       <Input
         field={form.fields.buy}
-        label={buyLabel ? `~$${buyLabel}` : ''}
+        label={buyLabel ? `~${buyLabel}` : ''}
         mask="amount"
         disabled
         rightNode={(
@@ -67,7 +67,7 @@ const Form: React.FC<FormProps> = (props) => {
       <Input
         className="mt-4"
         field={form.fields.sell}
-        label={sellLabel ? `~$${sellLabel}` : ''}
+        label={sellLabel ? `~${sellLabel}` : ''}
         mask="amount"
         autoFocus
         rightNode={(

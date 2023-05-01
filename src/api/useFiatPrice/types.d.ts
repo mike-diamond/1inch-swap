@@ -11,5 +11,5 @@ export type ApiData = {
 
 export type Input = {
   value: string
-  token: string
+  token?: string
 }

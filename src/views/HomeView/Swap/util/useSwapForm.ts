@@ -1,31 +1,11 @@
 import { useEffect, useMemo } from 'react'
-import { initContext } from 'modules'
-import { useQuote, useTokens } from 'api'
+import { useTokens } from 'api'
 import { useForm, useFormState } from 'formular'
 
 
-export const initialContext: Swap.Context = {
-  rate: 0,
-  toAmount: '0',
-  initialRate: 0,
-  estimatedGas: 0,
-  // @ts-ignore
-  form: {},
-  // @ts-ignore
-  values: {},
-  // @ts-ignore
-  toToken: {},
-  // @ts-ignore
-  fromToken: {},
-  sellOptions: [],
-  buyOptions: [],
-}
+type Output = Pick<Swap.Context, 'form' | 'values' | 'fromToken' | 'toToken' | 'sellOptions' | 'buyOptions'>
 
-export const {
-  Provider,
-  useData,
-  useInit,
-} = initContext<Swap.Context>(initialContext, () => {
+const useSwapForm = (): Output => {
   const form = useForm<Swap.Fields>({
     fields: {
       buy: {
@@ -86,7 +66,7 @@ export const {
     }
 
     return []
-  }, [ tokens, toToken ])
+  }, [ tokens, fromToken ])
 
   useEffect(() => {
     if (sellOptions.length && !fromToken) {
@@ -100,38 +80,15 @@ export const {
     }
   }, [ form, toToken, buyOptions ])
 
-  const { rate, toAmount, estimatedGas } = useQuote({
-    fromToken,
-    toToken,
-    amount: values.sell,
-  })
-
-  const { rate: initialRate } = useQuote({
-    fromToken,
-    toToken,
-    amount: '1',
-    cache: 'force-cache',
-  })
-
-  useEffect(() => {
-    if (toAmount) {
-      form.fields.buy.set(toAmount)
-    }
-    else {
-      form.fields.buy.set('0')
-    }
-  }, [ form, toAmount ])
-
   return {
     form,
     values,
-    rate,
-    initialRate,
-    toAmount,
-    toToken,
     fromToken,
-    estimatedGas,
+    toToken,
     sellOptions,
     buyOptions,
   }
-})
+}
+
+
+export default useSwapForm

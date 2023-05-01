@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import Image from 'next/image'
 import cx from 'classnames'
 import { formatUnits } from '@ethersproject/units'
@@ -7,23 +7,25 @@ import { useFiatPrice } from 'api'
 import Icon from 'components/Icon/Icon'
 import Text from 'components/Text/Text'
 import ButtonBase from 'components/ButtonBase/ButtonBase'
-import { swapContext } from 'components/Swap/util'
+import { swapContext } from 'views/HomeView/Swap/util'
 
 import gasImage from './images/gas.png'
-import formatInteger from '../../../../api/useFiatPrice/formatInteger'
+import formatInteger from '../../../../../api/useFiatPrice/formatInteger'
 
 
 type PriceProps = {
   className?: string
 }
 
-const Price: React.FC<PriceProps> = (props) => {
-  const { className } = props
-
+const Price: React.FC<PriceProps> = ({ className }) => {
   const { rate, initialRate, fromToken, toToken, estimatedGas } = swapContext.useData()
 
   const rateValue = rate || initialRate
   const lastRateRef = useRef(rateValue)
+
+  useEffect(() => {
+    lastRateRef.current = 0
+  }, [ fromToken, toToken ])
 
   lastRateRef.current = rate || lastRateRef.current || initialRate
 
@@ -42,7 +44,7 @@ const Price: React.FC<PriceProps> = (props) => {
       const rateString = lastRateRef.current.toFixed(4)
         .replace(/(\.0)?0$/, '')
 
-      return `1 ${toToken.symbol} = ${formatInteger(rateString)} ${fromToken.symbol} <span class='color-navy'>($${fiatValue})</span>`
+      return `1 ${toToken.symbol} = ${formatInteger(rateString)} ${fromToken.symbol} <span class="color-navy">(${fiatValue})</span>`
     }
 
     return ''
@@ -76,7 +78,7 @@ const Price: React.FC<PriceProps> = (props) => {
         />
         <Text
           className="ml-4"
-          message={`$${gasFiatValue}`}
+          message={gasFiatValue}
           size="n14"
           color="navy"
         />

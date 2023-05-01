@@ -49,7 +49,6 @@ export const {
 
         const chain = Number(window.ethereum?.networkVersion)
 
-        console.log('set', address)
         setState({ address, chain, isConnecting: false })
       }
       catch (error) {
@@ -67,8 +66,10 @@ export const {
         connect()
       })
 
-      window.ethereum.on('chainChanged', () => {
-        setState((state) => ({ ...state, chain: Number(window.ethereum?.networkVersion) || 1 }))
+      window.ethereum.on('chainChanged', (chainId) => {
+        const chain = parseInt(chainId, 16) || 1
+
+        setState((state) => ({ ...state, chain }))
       })
 
       const isConnected = localStorage.getItem('address')

@@ -26,8 +26,8 @@ export type ApiData = {
 }
 
 export type Input = {
-  fromToken: TokenApiData
-  toToken: TokenApiData
+  fromToken?: TokenApiData
+  toToken?: TokenApiData
   amount: string
-  allowance: string
+  skip: boolean
 }

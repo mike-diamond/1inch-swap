@@ -2,7 +2,7 @@ import { Form } from 'formular'
 
 import { DropdownProps } from 'components/Dropdown/Dropdown'
 
-import { TokenApiData } from '../../api/useQuote/types'
+import { TokenApiData } from '../../../api/useQuote/types'
 
 
 declare global {
@@ -23,8 +23,8 @@ declare global {
       rate: number
       initialRate: number
       toAmount: string
-      toToken: TokenApiData
-      fromToken: TokenApiData
+      toToken?: TokenApiData
+      fromToken?: TokenApiData
       estimatedGas: number
       sellOptions: DropdownProps['options']
       buyOptions: DropdownProps['options']
