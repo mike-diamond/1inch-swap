@@ -16,7 +16,7 @@ type Output<Data> = State<Data> & {
   }
 }
 
-const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache'): Output<Data> => {
+const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache', skip?: boolean): Output<Data> => {
   const [ state, setState ] = useState<State<Data>>({
     data: null,
     error: null,
@@ -73,14 +73,14 @@ const useQuery = <Data>(url: string, cache: RequestCache = 'no-cache'): Output<D
   }, [ url, cache, setState ])
 
   useEffect(() => {
-    if (url) {
+    if (url && !skip) {
       const { controller } = handleRequest()
 
       return () => {
         controller.abort()
       }
     }
-  }, [ url, setState, handleRequest ])
+  }, [ url, skip, setState, handleRequest ])
 
   return useMemo(() => {
     const isUrlUpdated = url && urlRef.current !== url

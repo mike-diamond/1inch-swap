@@ -9,20 +9,20 @@ import * as swapContext from './context'
 
 const useSwapActions = () => {
   const { address, provider } = web3.useData()
-  const { fromToken, toToken, values } = swapContext.useData()
+  const { form, fromToken, toToken, values } = swapContext.useData()
 
   const [ isSubmitting, setSubmitting ] = useState(false)
 
   const { allowance, isFetching: isAllowanceFetching } = useAllowance(fromToken?.address)
 
+  const needApprove = allowance && fromToken
+    ? parseUnits(values.sell.replace(/\s/g, '') || '0', fromToken.decimals).gt(allowance)
+    : true
+
   const { transactionData } = useTransaction({
     tokenAddress: fromToken?.address,
-    skip: Boolean(allowance),
+    skip: !needApprove,
   })
-
-  const needApprove = allowance && fromToken
-    ? parseUnits(values.sell.replace(/\s/g, ''), fromToken.decimals).gt(allowance)
-    : true
 
   const { swapTransactionData, fetchSwap } = useSwap({
     fromToken: fromToken,
@@ -32,7 +32,7 @@ const useSwapActions = () => {
   })
 
   const handleApprove = useCallback(async () => {
-    if (provider && transactionData) {
+    if (address && provider && transactionData) {
       const signer = provider.getUncheckedSigner(address)
       const transaction = await signer.sendTransaction(transactionData)
       await transaction.wait()
@@ -65,6 +65,11 @@ const useSwapActions = () => {
           const { gas, ...txData } = transactionData
 
           await handleSwap(txData)
+
+          form.fields.buy.set('0')
+          form.fields.sell.set('0')
+
+          alert('Successfully swapped')
         }
       }
       catch (error) {
@@ -73,7 +78,7 @@ const useSwapActions = () => {
 
       setSubmitting(false)
     }
-  }, [ address, allowance, handleApprove, swapTransactionData ])
+  }, [ form, address, allowance, needApprove, handleApprove, swapTransactionData ])
 
   return {
     approveAndSwap: handleApproveAndSwap,

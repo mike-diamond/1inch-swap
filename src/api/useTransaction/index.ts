@@ -8,7 +8,7 @@ const useTransaction = ({ amount, tokenAddress, skip }: Input) => {
   const { chain, address } = web3.useData()
 
   const url = useMemo(() => {
-    if (address && tokenAddress && !skip) {
+    if (address && tokenAddress) {
       let query = `tokenAddress=${tokenAddress}`
 
       if (amount) {
@@ -19,9 +19,9 @@ const useTransaction = ({ amount, tokenAddress, skip }: Input) => {
     }
 
     return ''
-  }, [ skip, address, tokenAddress ])
+  }, [ address, tokenAddress ])
 
-  const { data, isFetching } = useQuery<ApiData>(url)
+  const { data, isFetching } = useQuery<ApiData>(url, 'no-cache', skip)
 
   return {
     transactionData: data,

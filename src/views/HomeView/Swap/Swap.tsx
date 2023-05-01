@@ -48,6 +48,12 @@ const Swap: React.FC<SwapProps> = ({ className }) => {
     return 'Swap'
   }, [ address, fromToken, isConnecting, isSufficient, isSubmitting ])
 
+  const isButtonDisabled = Boolean(address) && (
+    isSubmitting
+    || !isSufficient
+    || !Number(values.sell.replace(/\s/g, ''))
+  )
+
   return (
     <div className={cx(s.wrapper, className, 'radius-30 p-2')}>
       <div className={cx(s.container, 'h-full radius-28 py-30 px-24 bg-raven')}>
@@ -57,7 +63,7 @@ const Swap: React.FC<SwapProps> = ({ className }) => {
           <Button
             className="w-full"
             title={buttonTitle}
-            disabled={Boolean(address) && (!isSufficient || isSubmitting || !Number(values.sell))}
+            disabled={isButtonDisabled}
             onClick={handleClick}
           />
         </div>
