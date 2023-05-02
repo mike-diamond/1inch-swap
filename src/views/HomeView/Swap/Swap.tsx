@@ -19,7 +19,7 @@ const Swap: React.FC<SwapProps> = ({ className }) => {
   const { address, connect, isConnecting } = web3.useData()
   const { fromToken, values } = swapContext.useData()
 
-  const { isSufficient } = useBalance()
+  const { balance, isSufficient } = useBalance()
   const { approveAndSwap, isSubmitting } = useSwapActions()
 
   const handleClick = useCallback(async () => {
@@ -58,7 +58,7 @@ const Swap: React.FC<SwapProps> = ({ className }) => {
     <div className={cx(s.wrapper, className, 'radius-30 p-2')}>
       <div className={cx(s.container, 'h-full radius-28 py-30 px-24 bg-raven')}>
         <Menu className="px-6" />
-        <Form className="mt-20" />
+        <Form className="mt-20" balance={balance} />
         <div className="mt-24 px-6">
           <Button
             className="w-full"

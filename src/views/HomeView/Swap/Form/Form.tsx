@@ -12,10 +12,11 @@ import ExchangeButton from './ExchangeButton/ExchangeButton'
 
 type FormProps = {
   className?: string
+  balance?: string
 }
 
 const Form: React.FC<FormProps> = (props) => {
-  const { className } = props
+  const { className, balance } = props
 
   const { form, values, fromToken, toToken, sellOptions, buyOptions } = swapContext.useData()
 
@@ -32,19 +33,20 @@ const Form: React.FC<FormProps> = (props) => {
   return (
     <div className={className}>
       <Input
-        field={form.fields.buy}
-        label={buyLabel ? `~${buyLabel}` : ''}
+        className="mt-4"
+        field={form.fields.sell}
+        label={sellLabel ? `~${sellLabel}` : ''}
         mask="amount"
-        disabled
         rightNode={(
           <TokenSelect
             className="ml-16"
-            label="You buy"
-            token={toToken?.symbol}
-            image={toToken?.logoURI}
-            options={buyOptions}
-            withMinButton
-            onChange={(value) => form.fields.buyToken.set(value)}
+            label="You sell"
+            token={fromToken?.symbol}
+            image={fromToken?.logoURI}
+            options={sellOptions}
+            max={balance}
+            onChange={(value) => form.fields.sellToken.set(value)}
+            onMaxButtonClick={() => form.fields.sell.set(balance)}
           />
         )}
       />
@@ -65,19 +67,18 @@ const Form: React.FC<FormProps> = (props) => {
         <div className="absolute w-full h-px bg-onyx left-0 top-50" />
       </div>
       <Input
-        className="mt-4"
-        field={form.fields.sell}
-        label={sellLabel ? `~${sellLabel}` : ''}
+        field={form.fields.buy}
+        label={buyLabel ? `~${buyLabel}` : ''}
         mask="amount"
-        autoFocus
+        disabled
         rightNode={(
           <TokenSelect
             className="ml-16"
-            label="You sell"
-            token={fromToken?.symbol}
-            image={fromToken?.logoURI}
-            options={sellOptions}
-            onChange={(value) => form.fields.sellToken.set(value)}
+            label="You buy"
+            token={toToken?.symbol}
+            image={toToken?.logoURI}
+            options={buyOptions}
+            onChange={(value) => form.fields.buyToken.set(value)}
           />
         )}
       />

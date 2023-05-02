@@ -20,8 +20,9 @@ type TokenSelectProps = {
   token?: string
   image?: string
   options: DropdownProps['options']
-  withMinButton?: boolean
+  max?: string
   onChange: DropdownProps['onChange']
+  onMaxButtonClick?: () => void
 }
 
 const tokenImages = {
@@ -30,7 +31,7 @@ const tokenImages = {
 }
 
 const TokenSelect: React.FC<TokenSelectProps> = (props) => {
-  const { className, label, token, image, options, withMinButton, onChange } = props
+  const { className, label, token, image, options, max, onChange, onMaxButtonClick } = props
 
   const tokenImage = tokenImages[token as keyof typeof tokenImages] || image
 
@@ -53,12 +54,13 @@ const TokenSelect: React.FC<TokenSelectProps> = (props) => {
       />
       <div className="flex items-center mt-4">
         {
-          withMinButton && (
+          Number(max) > 0 && (
             <ButtonBase
               className={cx(s.buttonMin, 'bg-coal px-12 mr-12 radius-8 uppercase')}
+              onClick={onMaxButtonClick}
             >
               <Text
-                message="Min"
+                message="Max"
                 size="t8"
                 color="pearl"
               />
